@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-demo1
+  namespace: demo1
+  labels:
+    app.kubernetes.io/name: nginx-demo1
+    app.kubernetes.io/part-of: aiops-incident-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx-demo1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nginx-demo1
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: custom-html
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+      volumes:
+        - name: custom-html
+          configMap:
+            name: nginx-demo1-html
+
