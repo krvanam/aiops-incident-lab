@@ -2,7 +2,16 @@
 
 A hands-on Kubernetes, observability, and AIOps portfolio project.
 
-## Day 1 outcome
+## Learning labs
+
+Each day is self-contained: its guide, manifests, runbooks, and later supporting code live together.
+
+| Day | Lab | Outcome |
+|---|---|---|
+| 1 | [Kubernetes foundations](labs/day-01-kubernetes-foundations/) | Run NGINX on Kind, inspect resources, troubleshoot image pulls, and expose it with a Service. |
+| 2 | [Prometheus and Grafana](labs/day-02-prometheus-grafana/) | Install the monitoring stack and explore cluster metrics. |
+
+## Day 1 architecture
 
 Day 1 establishes a local Kind cluster and deploys NGINX through a Kubernetes Service.
 
@@ -39,6 +48,7 @@ Expected context: `kind-aiops-lab`.
 ## Deploy Day 1 application
 
 ```bash
+cd labs/day-01-kubernetes-foundations
 kubectl apply -f k8s/
 kubectl get all -n demo1
 kubectl get endpointslice -n demo1 \
@@ -53,13 +63,6 @@ kubectl port-forward -n demo1 svc/nginx-demo1-svc 8080:80
 
 Open `http://localhost:8080` or run `curl http://localhost:8080` from another terminal.
 
-## Learning documentation
-
-- [Day 1 guide](docs/day-1-kubernetes-lab.md)
-- [Image pull failure runbook](runbooks/image-pull-backoff.md)
-- [Day 2 monitoring plan](docs/day-2-prometheus-grafana.md)
-
 ## Safety
 
 This project is a local learning lab. Do not commit passwords, API tokens, customer data, kubeconfig files, or cloud credentials.
-
