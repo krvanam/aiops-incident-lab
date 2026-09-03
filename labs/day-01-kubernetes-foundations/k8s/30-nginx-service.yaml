@@ -4,14 +4,14 @@ metadata:
   name: nginx-demo1-svc
   namespace: demo1
   labels:
+    app: nginx-demo1
     app.kubernetes.io/name: nginx-demo1
 spec:
   type: NodePort
   selector:
-    app.kubernetes.io/name: nginx-demo1
+    app: nginx-demo1
   ports:
     - name: http
       protocol: TCP
       port: 80
       targetPort: http
-

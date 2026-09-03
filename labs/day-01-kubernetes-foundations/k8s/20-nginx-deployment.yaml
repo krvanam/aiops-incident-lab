@@ -4,16 +4,18 @@ metadata:
   name: nginx-demo1
   namespace: demo1
   labels:
+    app: nginx-demo1
     app.kubernetes.io/name: nginx-demo1
     app.kubernetes.io/part-of: aiops-incident-lab
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app.kubernetes.io/name: nginx-demo1
+      app: nginx-demo1
   template:
     metadata:
       labels:
+        app: nginx-demo1
         app.kubernetes.io/name: nginx-demo1
     spec:
       containers:
@@ -49,4 +51,3 @@ spec:
         - name: custom-html
           configMap:
             name: nginx-demo1-html
-
