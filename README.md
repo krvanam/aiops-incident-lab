@@ -9,7 +9,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | Day | Lab | Outcome |
 |---|---|---|
 | 1 | [Kubernetes foundations](labs/day-01-kubernetes-foundations/) | Run NGINX on Kind, inspect resources, troubleshoot image pulls, and expose it with a Service. |
-| 2 | [Prometheus and Grafana](labs/day-02-prometheus-grafana/) | Install the monitoring stack and explore cluster metrics. |
+| 2 | [Prometheus and Grafana](labs/day-02-prometheus-grafana/) | Observe cluster and workload metrics, query pod restarts, and investigate a controlled container restart. |
 
 ## Day 1 architecture
 
