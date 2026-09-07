@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: orders-api
+  namespace: demo1
+  labels:
+    release: monitoring
+    app.kubernetes.io/part-of: aiops-incident-lab
+spec:
+  selector:
+    matchLabels:
+      app: orders-api
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
