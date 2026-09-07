@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: demo1-nginx-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+    app.kubernetes.io/part-of: aiops-incident-lab
+spec:
+  groups:
+    - name: demo1.nginx.availability
+      rules:
+        - alert: Demo1NginxPodRestarted
+          expr: |
+            sum by (namespace, pod, container) (
+              increase(kube_pod_container_status_restarts_total{
+                namespace="demo1",
+                container="nginx"
+              }[5m])
+            ) > 0
+          for: 1m
+          labels:
+            severity: warning
+            service: nginx-demo1
+            team: platform
+          annotations:
+            summary: "NGINX container restarted in demo1"
+            description: "Container {{ $labels.container }} in pod {{ $labels.pod }} restarted in namespace {{ $labels.namespace }} during the last five minutes."
+            runbook_url: "https://github.com/<your-github-user>/aiops-incident-lab/blob/main/labs/day-03-alerting-and-slos/runbooks/nginx-pod-restart.md"
