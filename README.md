@@ -12,6 +12,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | 2 | [Prometheus and Grafana](labs/day-02-prometheus-grafana/) | Observe cluster and workload metrics, query pod restarts, and investigate a controlled container restart. |
 | 3 | [Alerting and SLOs](labs/day-03-alerting-and-slos/) | Deploy, trigger, and investigate a Prometheus pod-restart alert with an operational runbook. |
 | 4 | [Application SLIs and SLOs](labs/day-04-application-sli-slo/) | Build an instrumented FastAPI service, scrape application metrics, and calculate availability and latency indicators. |
+| 5 | [SLO-based alerting](labs/day-05-slo-alerting/) | Alert on user-facing error rate and p95 latency, then investigate the alerts through a runbook. |
 
 ## Day 1 architecture
 

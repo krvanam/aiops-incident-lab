@@ -1,0 +1,56 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: orders-api-slo-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+    app.kubernetes.io/part-of: aiops-incident-lab
+spec:
+  groups:
+    - name: demo1.orders-api.slo
+      rules:
+        - alert: OrdersApiHighErrorRate
+          expr: |
+            (
+              sum(rate(demo_api_http_requests_total{
+                namespace="demo1",
+                status_code=~"5.."
+              }[5m]))
+              /
+              sum(rate(demo_api_http_requests_total{namespace="demo1"}[5m]))
+            ) > 0.05
+            and
+            sum(rate(demo_api_http_requests_total{namespace="demo1"}[5m])) > 0
+          for: 2m
+          labels:
+            severity: warning
+            service: orders-api
+            team: platform
+            slo: availability
+          annotations:
+            summary: "Orders API error rate exceeds 5%"
+            description: "The Orders API has returned more than 5% HTTP 5xx responses for at least two minutes. Check the service-level availability SLI and recent pod logs."
+            runbook_url: "https://github.com/<your-github-user>/aiops-incident-lab/blob/main/labs/day-05-slo-alerting/runbooks/orders-api-slo-breach.md"
+        - alert: OrdersApiHighP95Latency
+          expr: |
+            histogram_quantile(
+              0.95,
+              sum by (le) (
+                rate(demo_api_http_request_duration_seconds_bucket{
+                  namespace="demo1"
+                }[5m])
+              )
+            ) > 0.5
+            and
+            sum(rate(demo_api_http_requests_total{namespace="demo1"}[5m])) > 0
+          for: 2m
+          labels:
+            severity: warning
+            service: orders-api
+            team: platform
+            slo: latency
+          annotations:
+            summary: "Orders API p95 latency exceeds 500 ms"
+            description: "Orders API p95 latency has exceeded 500 ms for at least two minutes. Check traffic pattern, downstream dependencies, pod resources, and application logs."
+            runbook_url: "https://github.com/<your-github-user>/aiops-incident-lab/blob/main/labs/day-05-slo-alerting/runbooks/orders-api-slo-breach.md"
