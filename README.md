@@ -13,6 +13,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | 3 | [Alerting and SLOs](labs/day-03-alerting-and-slos/) | Deploy, trigger, and investigate a Prometheus pod-restart alert with an operational runbook. |
 | 4 | [Application SLIs and SLOs](labs/day-04-application-sli-slo/) | Build an instrumented FastAPI service, scrape application metrics, and calculate availability and latency indicators. |
 | 5 | [SLO-based alerting](labs/day-05-slo-alerting/) | Alert on user-facing error rate and p95 latency, then investigate the alerts through a runbook. |
+| 6 | [Alertmanager routing](labs/day-06-alertmanager-routing/) | Group related SLO alerts by owning team and service, then route them to a training receiver. |
 
 ## Day 1 architecture
 
