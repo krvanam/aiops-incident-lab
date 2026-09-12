@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orders-api-operations-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+    app.kubernetes.io/part-of: aiops-incident-lab
+data:
+  orders-api-operations.json: |
+    {
+      "annotations": {"list": []},
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "description": "Percentage of Orders API requests that did not return a 5xx response during the last five minutes.",
+          "fieldConfig": {"defaults": {"decimals": 2, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "orange", "value": 95}, {"color": "green", "value": 99.9}]}, "unit": "percent"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
+          "id": 1,
+          "options": {"colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "pluginVersion": "12.1.0",
+          "targets": [{"expr": "100 * (1 - (sum(rate(demo_api_http_requests_total{namespace=\"demo1\",status_code=~\"5..\"}[5m])) / sum(rate(demo_api_http_requests_total{namespace=\"demo1\"}[5m]))))", "legendFormat": "availability", "refId": "A"}],
+          "title": "Availability SLI (5m)",
+          "type": "stat"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "description": "5xx requests as a percentage of all Orders API requests during the last five minutes. The Day 5 alert threshold is 5%.",
+          "fieldConfig": {"defaults": {"decimals": 2, "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "orange", "value": 1}, {"color": "red", "value": 5}]}, "unit": "percent"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
+          "id": 2,
+          "options": {"colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "pluginVersion": "12.1.0",
+          "targets": [{"expr": "100 * sum(rate(demo_api_http_requests_total{namespace=\"demo1\",status_code=~\"5..\"}[5m])) / sum(rate(demo_api_http_requests_total{namespace=\"demo1\"}[5m]))", "legendFormat": "5xx error rate", "refId": "A"}],
+          "title": "5xx Error Rate (5m)",
+          "type": "stat"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "description": "Estimated 95th-percentile Orders API duration. The Day 5 alert threshold is 500 ms.",
+          "fieldConfig": {"defaults": {"decimals": 3, "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 0.5}]}, "unit": "s"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0},
+          "id": 3,
+          "options": {"colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "pluginVersion": "12.1.0",
+          "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(demo_api_http_request_duration_seconds_bucket{namespace=\"demo1\"}[5m])))", "legendFormat": "p95", "refId": "A"}],
+          "title": "p95 Latency (5m)",
+          "type": "stat"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "description": "Count of currently firing Orders API SLO alerts.",
+          "fieldConfig": {"defaults": {"decimals": 0, "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}, "unit": "short"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0},
+          "id": 4,
+          "options": {"colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "pluginVersion": "12.1.0",
+          "targets": [{"expr": "sum(ALERTS{alertname=~\"OrdersApiHighErrorRate|OrdersApiHighP95Latency\",alertstate=\"firing\"})", "legendFormat": "firing alerts", "refId": "A"}],
+          "title": "Firing Orders API SLO Alerts",
+          "type": "stat"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "fieldConfig": {"defaults": {"custom": {"axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "requests / second", "axisPlacement": "auto", "drawStyle": "line", "fillOpacity": 10, "lineInterpolation": "linear", "lineWidth": 1, "showPoints": "auto", "spanNulls": false, "stacking": {"group": "A", "mode": "none"}}, "unit": "reqps"}, "overrides": []},
+          "gridPos": {"h": 9, "w": 12, "x": 0, "y": 8},
+          "id": 5,
+          "options": {"legend": {"calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "targets": [{"expr": "sum by (status_code) (rate(demo_api_http_requests_total{namespace=\"demo1\"}[5m]))", "legendFormat": "HTTP {{status_code}}", "refId": "A"}],
+          "title": "Request Rate by Status Code",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "fieldConfig": {"defaults": {"custom": {"axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "seconds", "axisPlacement": "auto", "drawStyle": "line", "fillOpacity": 10, "lineInterpolation": "linear", "lineWidth": 2, "showPoints": "auto", "spanNulls": false, "stacking": {"group": "A", "mode": "none"}}, "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 0.5}]}, "unit": "s"}, "overrides": []},
+          "gridPos": {"h": 9, "w": 12, "x": 12, "y": 8},
+          "id": 6,
+          "options": {"legend": {"calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(demo_api_http_request_duration_seconds_bucket{namespace=\"demo1\"}[5m])))", "legendFormat": "p95 latency", "refId": "A"}],
+          "title": "p95 Latency Trend",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "fieldConfig": {"defaults": {"custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": false}, "decimals": 0, "unit": "short"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 24, "x": 0, "y": 17},
+          "id": 7,
+          "options": {"cellHeight": "sm", "showHeader": true},
+          "targets": [{"expr": "sum by (pod, container) (increase(kube_pod_container_status_restarts_total{namespace=\"demo1\"}[1h]))", "format": "table", "instant": true, "refId": "A"}],
+          "title": "Container Restarts — Last Hour",
+          "transformations": [{"id": "organize", "options": {"excludeByName": {"Time": true}, "indexByName": {}, "renameByName": {"Value": "Restarts"}}}],
+          "type": "table"
+        }
+      ],
+      "refresh": "30s",
+      "schemaVersion": 41,
+      "tags": ["aiops", "orders-api", "slo", "incident-response"],
+      "templating": {"list": []},
+      "time": {"from": "now-1h", "to": "now"},
+      "timezone": "browser",
+      "title": "Orders API — Operations Overview",
+      "uid": "orders-api-operations",
+      "version": 1
+    }
