@@ -1,0 +1,24 @@
+
+
+
+Day1 : Creating Kubernets cluster
+
+mkdir -p ~/aiops-incident-lab
+cd ~/aiops-incident-lab
+git init
+
+docker --version
+kubectl version --client
+kind --version
+helm version
+git --version
+
+kind create cluster --name aiops-lab
+kubectl cluster-info --context kind-aiops-lab
+kubectl get nodes
+kubectl get namespaces
+
+export KUBECONFIG="$HOME/.kube/aiops-lab-kind.yaml"
+
+
+
