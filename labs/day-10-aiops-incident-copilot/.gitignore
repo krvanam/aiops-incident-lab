@@ -1,0 +1,4 @@
+# Incident reports may contain local logs and operational timestamps.
+reports/*.md
+reports/*.json
+!reports/.gitkeep

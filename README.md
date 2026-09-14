@@ -17,6 +17,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | 7 | [Grafana dashboard as code](labs/day-07-grafana-dashboard-as-code/) | Provision an Orders API incident dashboard from Git with SLI, SLO, and alert-state panels. |
 | 8 | [GitOps with Argo CD](labs/day-08-gitops-argocd/) | Continuously reconcile the Orders API from this Git repository, with automated self-healing and no automatic pruning. |
 | 9 | [Incident runbooks and guarded remediation](labs/day-09-incident-runbooks-remediation/) | Triage an Orders API SLO incident, collect before-and-after evidence, and perform only an explicitly approved rollout restart. |
+| 10 | [AIOps Incident Intelligence Copilot](labs/day-10-aiops-incident-copilot/) | Build an evidence-backed, read-only incident brief from Prometheus, Kubernetes, Argo CD, and runbook context. |
 
 ## Day 1 architecture
 
