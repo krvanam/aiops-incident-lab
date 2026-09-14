@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: orders-api-gitops
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: orders-api
+    app.kubernetes.io/part-of: aiops-incident-lab
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/krvanam/aiops-incident-lab.git
+    targetRevision: main
+    path: labs/day-04-application-sli-slo/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo1
+  syncPolicy:
+    automated:
+      # Keep deletion a deliberate operator action during this training lab.
+      prune: false
+      # Correct a manual change such as scaling the Deployment to one replica.
+      selfHeal: true
+    syncOptions:
+      # demo1 is created by the earlier lab and must not be created implicitly.
+      - CreateNamespace=false
