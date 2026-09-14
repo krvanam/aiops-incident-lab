@@ -16,6 +16,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | 6 | [Alertmanager routing](labs/day-06-alertmanager-routing/) | Group related SLO alerts by owning team and service, then route them to a training receiver. |
 | 7 | [Grafana dashboard as code](labs/day-07-grafana-dashboard-as-code/) | Provision an Orders API incident dashboard from Git with SLI, SLO, and alert-state panels. |
 | 8 | [GitOps with Argo CD](labs/day-08-gitops-argocd/) | Continuously reconcile the Orders API from this Git repository, with automated self-healing and no automatic pruning. |
+| 9 | [Incident runbooks and guarded remediation](labs/day-09-incident-runbooks-remediation/) | Triage an Orders API SLO incident, collect before-and-after evidence, and perform only an explicitly approved rollout restart. |
 
 ## Day 1 architecture
 
