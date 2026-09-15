@@ -29,9 +29,9 @@ Kind cluster
 | Kubernetes object fields | Ensures lab manifest documents include `apiVersion` and `kind`. |
 | Python compilation | Catches syntax errors in the FastAPI service and incident copilot. |
 | Bash syntax | Catches syntax errors in the guarded remediation tool. |
-| `kubectl --dry-run=client` | Validates the core built-in Kubernetes manifests without a cluster connection. |
+| Local `kubectl --dry-run=client` | Performs an additional validation against the connected local learning cluster without writing resources. |
 
-The workflow has read-only GitHub permission and no kubeconfig, API key, secret, or deployment credential.
+The GitHub workflow has read-only permission and no kubeconfig, API key, secret, or deployment credential. It intentionally does **not** call `kubectl`: even client-side `kubectl apply` needs API discovery, which a hosted GitHub runner cannot obtain from your local Kind cluster.
 
 ## Files
 
@@ -62,7 +62,7 @@ Expected ending:
 All Day 11 local quality gates passed. No cluster resource was changed.
 ```
 
-The script uses `kubectl apply --dry-run=client`, which prepares objects locally but does not send a create/update request to Kubernetes.
+The local script uses `kubectl apply --dry-run=client`. It reads API discovery from your connected Kind cluster but does not send a create/update request to Kubernetes. That check stays local by design; GitHub Actions performs offline YAML/object-structure checks only.
 
 ## 3. Publish and inspect GitHub Actions
 

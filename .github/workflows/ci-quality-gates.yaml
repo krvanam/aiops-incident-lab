@@ -23,11 +23,6 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: 'v1.31.8'
-
       - name: Install CI-only Python dependency
         run: python -m pip install --disable-pip-version-check -r labs/day-11-ci-quality-gates/config/requirements-ci.txt
 
@@ -41,8 +36,3 @@ jobs:
 
       - name: Validate guarded remediation shell syntax
         run: bash -n labs/day-09-incident-runbooks-remediation/scripts/orders-api-guarded-remediation.sh
-
-      - name: Client-side validate core Kubernetes manifests
-        run: |
-          kubectl apply --dry-run=client --validate=false -f labs/day-01-kubernetes-foundations/k8s/
-          kubectl apply --dry-run=client --validate=false -f labs/day-04-application-sli-slo/k8s/10-orders-api.yaml
