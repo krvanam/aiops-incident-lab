@@ -18,6 +18,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | 8 | [GitOps with Argo CD](labs/day-08-gitops-argocd/) | Continuously reconcile the Orders API from this Git repository, with automated self-healing and no automatic pruning. |
 | 9 | [Incident runbooks and guarded remediation](labs/day-09-incident-runbooks-remediation/) | Triage an Orders API SLO incident, collect before-and-after evidence, and perform only an explicitly approved rollout restart. |
 | 10 | [AIOps Incident Intelligence Copilot](labs/day-10-aiops-incident-copilot/) | Build an evidence-backed, read-only incident brief from Prometheus, Kubernetes, Argo CD, and runbook context. |
+| 11 | [CI quality gates](labs/day-11-ci-quality-gates/) | Validate YAML, Python, Bash, and core Kubernetes manifests before Git changes reach the Argo CD deployment source. |
 
 ## Day 1 architecture
 
