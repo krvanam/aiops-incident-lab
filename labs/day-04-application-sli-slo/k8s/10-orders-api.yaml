@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: orders-api
-          image: aiops-orders-api:v2
+          image: aiops-orders-api:v3
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

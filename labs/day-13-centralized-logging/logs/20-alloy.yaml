@@ -1,0 +1,153 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: alloy-log-collector
+  namespace: logs
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: alloy-log-collector
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "namespaces"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: alloy-log-collector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: alloy-log-collector
+subjects:
+  - kind: ServiceAccount
+    name: alloy-log-collector
+    namespace: logs
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alloy-config
+  namespace: logs
+data:
+  config.alloy: |
+    logging {
+      level  = "info"
+      format = "logfmt"
+    }
+
+    discovery.kubernetes "pods" {
+      role = "pod"
+    }
+
+    discovery.relabel "orders_api" {
+      targets = discovery.kubernetes.pods.targets
+
+      rule {
+        action        = "keep"
+        source_labels = ["__meta_kubernetes_namespace"]
+        regex         = "demo1"
+      }
+      rule {
+        action        = "keep"
+        source_labels = ["__meta_kubernetes_pod_label_app"]
+        regex         = "orders-api"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_namespace"]
+        target_label  = "namespace"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_pod_name"]
+        target_label  = "pod"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_pod_container_name"]
+        target_label  = "container"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_pod_label_app"]
+        target_label  = "app"
+      }
+      rule {
+        target_label = "job"
+        replacement  = "orders-api"
+      }
+    }
+
+    loki.source.kubernetes "orders_api" {
+      targets    = discovery.relabel.orders_api.output
+      forward_to = [loki.process.context.receiver]
+    }
+
+    loki.process "context" {
+      forward_to = [loki.write.local.receiver]
+
+      stage.static_labels {
+        values = {
+          cluster = "aiops-lab",
+          lab     = "day-13",
+        }
+      }
+    }
+
+    loki.write "local" {
+      endpoint {
+        url = "http://loki.logs.svc.cluster.local:3100/loki/api/v1/push"
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alloy-log-collector
+  namespace: logs
+  labels:
+    app: alloy-log-collector
+    app.kubernetes.io/part-of: aiops-incident-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alloy-log-collector
+  template:
+    metadata:
+      labels:
+        app: alloy-log-collector
+    spec:
+      serviceAccountName: alloy-log-collector
+      containers:
+        - name: alloy
+          image: grafana/alloy:v1.19.2
+          args:
+            - run
+            - /etc/alloy/config.alloy
+            - --server.http.listen-addr=0.0.0.0:12345
+          ports:
+            - name: http
+              containerPort: 12345
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: config
+              mountPath: /etc/alloy
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: alloy-config

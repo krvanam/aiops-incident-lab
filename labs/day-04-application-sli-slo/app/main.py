@@ -1,6 +1,7 @@
 """A small FastAPI service designed for observability practice."""
 
 import asyncio
+import logging
 import os
 import time
 
@@ -15,6 +16,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 app = FastAPI(title="AIOps Orders API", version="1.0.0")
+logger = logging.getLogger("uvicorn.error")
 
 REQUESTS = Counter(
     "demo_api_http_requests_total",
@@ -63,8 +65,18 @@ async def observe_requests(request: Request, call_next):
     REQUESTS.labels(**labels).inc()
     REQUEST_DURATION.labels(**labels).observe(duration)
     span_context = trace.get_current_span().get_span_context()
+    trace_id = ""
     if span_context.is_valid:
-        response.headers["X-Trace-Id"] = f"{span_context.trace_id:032x}"
+        trace_id = f"{span_context.trace_id:032x}"
+        response.headers["X-Trace-Id"] = trace_id
+    logger.info(
+        "event=orders_request method=%s route=%s status_code=%s duration_ms=%.2f trace_id=%s",
+        request.method,
+        route_name,
+        response.status_code,
+        duration * 1000,
+        trace_id or "unavailable",
+    )
     return response
 
 

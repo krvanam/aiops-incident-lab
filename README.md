@@ -20,6 +20,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | 10 | [AIOps Incident Intelligence Copilot](labs/day-10-aiops-incident-copilot/) | Build an evidence-backed, read-only incident brief from Prometheus, Kubernetes, Argo CD, and runbook context. |
 | 11 | [CI quality gates](labs/day-11-ci-quality-gates/) | Validate YAML, Python, Bash, and core Kubernetes manifests before Git changes reach the Argo CD deployment source. |
 | 12 | [OpenTelemetry tracing](labs/day-12-opentelemetry-tracing/) | Trace Orders API requests through a local OpenTelemetry Collector and Tempo, then investigate them in Grafana. |
+| 13 | [Centralized logs and trace correlation](labs/day-13-centralized-logging/) | Collect Orders API logs with Grafana Alloy, store them in Loki, and pivot from a log line to its Tempo trace. |
 
 ## Day 1 architecture
 
