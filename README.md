@@ -19,6 +19,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | 9 | [Incident runbooks and guarded remediation](labs/day-09-incident-runbooks-remediation/) | Triage an Orders API SLO incident, collect before-and-after evidence, and perform only an explicitly approved rollout restart. |
 | 10 | [AIOps Incident Intelligence Copilot](labs/day-10-aiops-incident-copilot/) | Build an evidence-backed, read-only incident brief from Prometheus, Kubernetes, Argo CD, and runbook context. |
 | 11 | [CI quality gates](labs/day-11-ci-quality-gates/) | Validate YAML, Python, Bash, and core Kubernetes manifests before Git changes reach the Argo CD deployment source. |
+| 12 | [OpenTelemetry tracing](labs/day-12-opentelemetry-tracing/) | Trace Orders API requests through a local OpenTelemetry Collector and Tempo, then investigate them in Grafana. |
 
 ## Day 1 architecture
 

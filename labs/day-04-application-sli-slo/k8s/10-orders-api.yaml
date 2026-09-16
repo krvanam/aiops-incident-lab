@@ -19,11 +19,16 @@ spec:
     spec:
       containers:
         - name: orders-api
-          image: aiops-orders-api:v1
+          image: aiops-orders-api:v2
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 8000
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: orders-api
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: otel-collector.tracing.svc.cluster.local:4317
           resources:
             requests:
               cpu: 50m
