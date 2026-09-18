@@ -21,5 +21,6 @@ data:
             - name: TraceID
               matcherRegex: "trace_id=([a-f0-9]{32})"
               datasourceUid: tempo
-              url: "${__value.raw}"
+              # Escape $ during provisioning so Grafana receives ${__value.raw}.
+              url: '$${__value.raw}'
               urlDisplayLabel: View trace

@@ -21,6 +21,7 @@ Each day is self-contained: its guide, manifests, runbooks, and later supporting
 | 11 | [CI quality gates](labs/day-11-ci-quality-gates/) | Validate YAML, Python, Bash, and core Kubernetes manifests before Git changes reach the Argo CD deployment source. |
 | 12 | [OpenTelemetry tracing](labs/day-12-opentelemetry-tracing/) | Trace Orders API requests through a local OpenTelemetry Collector and Tempo, then investigate them in Grafana. |
 | 13 | [Centralized logs and trace correlation](labs/day-13-centralized-logging/) | Collect Orders API logs with Grafana Alloy, store them in Loki, and pivot from a log line to its Tempo trace. |
+| 14 | [End-to-end incident investigation](labs/day-14-end-to-end-incident-investigation/) | Investigate one controlled Orders API incident from SLO signal through logs and traces to an evidence-backed decision. |
 
 ## Day 1 architecture
 
